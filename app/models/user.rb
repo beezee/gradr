@@ -12,7 +12,11 @@ class User < ActiveRecord::Base
   attr_accessible :email
 
   def random_string
-    Time.new.to_f.to_s.gsub(/\./, '').concat((0...10).map{ ('a'..'z').to_a[rand(26)] }.join).split("").shuffle.join
+    Time.new.to_f.to_s.gsub(/\./, '').concat((0...10).map{ ('a'..'z').to_a[rand(26)] }.join).split("").shuffle.join.concat(Time.new.to_f.to_s.gsub(/\./, ''))
+  end
+
+  def encrypt(string)
+    Digest::SHA1.hexdigest string.to_s
   end
 
   def update_password
@@ -33,5 +37,10 @@ class User < ActiveRecord::Base
     match = BCrypt::Password.new(self.password) == "#{hash}#{self.salt}"
     self.update_password
     match
+  end
+
+  def gravatar_url
+    hash = Digest::MD5.hexdigest(self.email.downcase.strip)
+    "http://www.gravatar.com/avatar/#{hash}"
   end
 end

@@ -1,6 +1,5 @@
 /* here you can put your own css to customize and override the theme */
- html,
-      body {
+html, body {
         height: 100%;
         /* The html and body elements cannot have any padding or margin. */
       }
@@ -15,16 +14,8 @@
       }
 
       /* Set the fixed height of the footer here */
+      #push,
       .footer {
         height: 60px;
       }
 
-      /* Lastly, apply responsive CSS fixes as necessary */
-      @media (max-width: 767px) {
-        .footer {
-          margin-left: -20px;
-          margin-right: -20px;
-          padding-left: 20px;
-          padding-right: 20px;
-        }
-      }

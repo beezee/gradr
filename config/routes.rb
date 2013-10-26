@@ -2,6 +2,8 @@ Gradr::Application.routes.draw do
   root 'users#request_invite'
   post '/' => 'users#request_invite', as: 'invite_request'
   get 'login/:slug/:link_hash' => 'users#login'
+  get 'logout' => 'users#logout', as: 'logout'
+  get 'dashboard' => 'users#dashboard', as: 'dashboard'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

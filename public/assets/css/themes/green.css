@@ -1,7 +1,3 @@
-/* general links color */
-a {
-	color: #35aa47;
-}
 /***
 General More Link
 ***/
@@ -14,13 +10,11 @@ a.more {
 .theme-btn {
 	color:#fff; 
 	background: #35aa47 !important; 
-	border: solid 1px #35aa47;
 }
  
 .theme-btn:hover {
 	color:#fff; 
 	background: #1aa22f !important; 
-	border: solid 1px #1aa22f;
 }
 
 /********************
@@ -54,15 +48,7 @@ Header and header elements.
 .header .nav li.active > a:after { 
 	border-top: 3px solid #35aa47;
 }
-@media (max-width: 767px) {
-.header.navbar-default .navbar-nav > li > a:hover, .header.navbar-default .navbar-nav > .active > a, .header.navbar-default .navbar-nav > .active > a:hover, .header.navbar-default .navbar-nav > .active > a:focus {
-	background: #35aa47 !important;
-	color: #fff !important;
-}
-}
-.header .nav li.dropdown.open>.dropdown-toggle {
-	color: #35aa47;
-}
+
 
 /*Navigation Toggle Icon*/
 .header .navbar-btn{
@@ -318,23 +304,4 @@ Blog Page
   color:#35aa47;
 }
 
-/* error colors */
-.page-404 .number, .page-500 .number {
-	color:#35aa47;
-}
 
-/***
-Vertical inline menu
-***/
-.ver-inline-menu {
-	border-left: solid 2px #35aa47;
-}
-.ver-inline-menu li:hover a{
-	background: #35aa47;
-}
-.ver-inline-menu li.active a{
-  background: #35aa47;
-}
-.ver-inline-menu li.active:after {
-  border-left: 6px solid #35aa47;
-}
