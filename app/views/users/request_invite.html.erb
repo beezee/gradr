@@ -1,0 +1,35 @@
+<% provide :title, 'Sign In' %>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+          <div class="copyright" style="text-align:center;">
+            <h3 class="panel-title" style="color:#eee;">
+                Enter your email to receive a login link
+            </h3>
+        </div>
+          <div class="panel-body">
+                <%= form_for(:user, url: invite_request_url) do |f| %>
+            <fieldset>
+              <div class="form-group">
+                  <%= f.text_field :email, :placeholder => 'Email Address', 
+                                            :class => 'form-control' %>
+              </div>
+            </fieldset>
+              <%= f.submit "Send login link", 
+                        :class => 'btn btn-primary btn-lg btn-block' %>
+             <% end %>
+          </div>
+        <% if @user.errors.any? %>
+        <div class="alert alert-warning">
+          <ul>
+             <% @user.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+             <% end %>
+           </ul>
+        </div>
+        <% elsif @user.id %>
+        <div class="alert alert-success">
+            We've sent a login link to <%= @user.email %>
+        </div>
+        <% end %>
+      </div>
+    </div>
