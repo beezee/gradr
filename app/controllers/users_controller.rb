@@ -15,17 +15,14 @@ class UsersController < ApplicationController
 
   def request_invite
     if signed_in?
-      redirect_to dashboard_url
+      redirect_to dashboard_url and return
     end
-    if !params[:user]
-      return @user = User.new
+    @user = params[:user] ? User.new.invite(params[:user][:email]) : User.new
+    respond_to do |f|
+      f.html { render :layout => false }
     end
-    @user = User.new.invite params[:user][:email]
   end
 
   def dashboard
-    respond_to do |f|
-      f.html { render :layout => 'dashboard' }
-    end
   end
 end

@@ -4,9 +4,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   rescue_from ActiveRecord::RecordNotFound, :with => :not_found
   include SessionsHelper
+  before_filter :authorize, :except => [:request_invite, :login]
 
   def default_url_options
     {:host => 'gradr.net'}
+  end
+
+  def authorize
+    if !signed_in?
+      redirect_to invite_request_url 
+    end
   end
 
   def not_found

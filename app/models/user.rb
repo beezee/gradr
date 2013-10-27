@@ -4,6 +4,11 @@ class User < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   validates :email, format: { with: /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, message: 'Must be a valid email address'}
+  has_and_belongs_to_many :criteria, join_table: "user_criteria"
+  has_many :grader_scorecards, class_name: 'Scorecard', foreign_key: 'grader_id'
+  has_many :gradee_scorecards, class_name: 'Scorecard', foreign_key: 'gradee_id'
+  has_many :graders, through: :gradee_scorecards
+  has_many :gradees, through: :grader_scorecards
 
   def slug_candidates
     [:email]
@@ -26,10 +31,11 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def invite(email)
+  def invite(email, msg_params={:type => 'login_request'})
     user = User.find_by_email(email.strip) || User.new({:email => email.strip})
     user.update_password
-    UserMailer.login_email(user).deliver
+    msg_params[:user] = user
+    UserMailer.invite(msg_params).deliver
     user
   end
 
@@ -43,4 +49,5 @@ class User < ActiveRecord::Base
     hash = Digest::MD5.hexdigest(self.email.downcase.strip)
     "http://www.gravatar.com/avatar/#{hash}"
   end
+
 end

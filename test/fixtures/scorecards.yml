@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  url: MyString
+  grader_id: 
+  gradee_id: 
+
+two:
+  url: MyString
+  grader_id: 
+  gradee_id: 

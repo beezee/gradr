@@ -11,7 +11,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131026134630) do
+ActiveRecord::Schema.define(version: 20131026210845) do
+
+  create_table "criteria", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "scorecards", force: true do |t|
+    t.string   "url"
+    t.integer  "grader_id"
+    t.integer  "gradee_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "scorecards", ["gradee_id"], name: "index_scorecards_on_gradee_id", using: :btree
+  add_index "scorecards", ["grader_id", "gradee_id"], name: "index_scorecards_on_grader_id_and_gradee_id", using: :btree
+  add_index "scorecards", ["grader_id"], name: "index_scorecards_on_grader_id", using: :btree
+
+  create_table "scores", force: true do |t|
+    t.integer  "criterium_id"
+    t.integer  "scorecard_id"
+    t.integer  "score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "scores", ["criterium_id"], name: "index_scores_on_criterium_id", using: :btree
+  add_index "scores", ["scorecard_id"], name: "index_scores_on_scorecard_id", using: :btree
+
+  create_table "user_criteria", force: true do |t|
+    t.integer  "criterium_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_criteria", ["criterium_id"], name: "index_user_criteria_on_criterium_id", using: :btree
+  add_index "user_criteria", ["user_id"], name: "index_user_criteria_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email"
@@ -24,5 +63,8 @@ ActiveRecord::Schema.define(version: 20131026134630) do
     t.string   "link_hash"
     t.string   "session_token"
   end
+
+  add_index "users", ["email"], name: "index_users_on_email", using: :btree
+  add_index "users", ["session_token"], name: "index_users_on_session_token", using: :btree
 
 end
