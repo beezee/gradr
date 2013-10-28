@@ -6,6 +6,7 @@ Gradr::Application.routes.draw do
   get 'dashboard' => 'users#dashboard', as: 'dashboard'
   get 'scorecard' => 'scorecards#edit', as: 'scorecard_editor'
   post 'scorecard/:id/invite-gradee' => 'scorecards#invite_gradee'
+  post 'scorecard/:id/save' => 'scorecards#save'
   post 'criteria/create' => 'criteria#create', as: 'criteria_create'
   post 'criteria/remove' => 'criteria#remove', as: 'criteria_remove'
   # The priority is based upon order of creation: first created -> highest priority.

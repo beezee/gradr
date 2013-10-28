@@ -23,4 +23,23 @@ class ScorecardsController < ApplicationController
     scorecard.save
     render json: {status: 'Success'}
   end
+
+  def save
+    if !scorecard = current_user.grader_scorecards.find(params[:id])
+      return render json: {error: 'Invalid scorecard specified'}
+    end
+    scorecard.gradee_id = params[:gradee_id]
+    scorecard.save
+    if scorecard.errors.any?
+      return render json: {error: scorecard.errors.full_messages.first}
+    end
+    params[:scores].each do |id, score|
+      if score_record = scorecard.scores.find(id)
+        score_record.score = score
+        score_record.save
+      end
+    end      
+    render json: {status: 'Success'}
+  end
+
 end

@@ -64,8 +64,9 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
                    <tbody>
                       <tr>
                          <td style="font-size:11px;max-width:98px;word-wrap:break-word;"> 
-                          <%= collection_select :scorecard, :gradee, current_user.gradees, :id, :email,
-                                  prompt: 'Select one' %>
+                          <%= collection_select :scorecard, :gradee, current_user.gradees.uniq,
+                                          :id, :email, prompt: 'Select one',
+                                          selected: @scorecard.gradee_id %>
                          </td>
                          <td>
                            <a class="editable-empty" id="invite-gradee"></a>
@@ -91,9 +92,11 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
                          <td> 
                             <%= select('criteria_score', criterium.score_for_scorecard(@scorecard).id, 
                                       10.downto(1).to_a,
-                                      {selected: criterium.score_for_scorecard(@scorecard).score},
-                                      class: 'form-control input-sm',
-                                      style: 'max-width:51px;padding-left:0px;padding-top:3px;') %>
+                                      {:selected => criterium.score_for_scorecard(@scorecard).score},
+                                      :class => 'form-control input-sm js-score-select',
+                                      :style => 'max-width:51px;padding-left:0px;padding-top:3px;',
+                                      :'data-score_id' =>
+                                          criterium.score_for_scorecard(@scorecard).id) %>
                          </td>
                          <td style="padding-top:11px;">
                           <i class="js-remove-criterium icon-remove clickable"
@@ -117,7 +120,7 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
               </div>
            </div>
         <div class="form-actions right" style="padding:4px 10px;margin-top:0px;"> 
-           <button type="submit" class="btn pull-right green">Save</button> 
+           <button type="submit" id="save-scorecard" class="btn pull-right green">Save</button> 
         </div>
      </form>
         
@@ -192,6 +195,22 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
               $.post('/criteria/remove', data, handleServerResponse);
             };
 
+            var getScores = function(){
+              var scores = {};
+              $('.js-score-select').each(function(){
+                scores[$(this).data('score_id')] = $(this).val();
+              });
+              return scores;
+            };
+            
+            var saveScorecard = function(){
+              var data = $.extend({
+                scores: getScores(),
+                gradee_id: $('#scorecard_gradee').val()
+              }, getCsrfToken());
+              $.post('/scorecard/<%= @scorecard.id %>/save', data, handleServerResponse);
+            };
+
             $('#create-criteria').on('click', addCriteria);
             $('#new-criteria').on('keydown', function(e){
                 if (e.keyCode !== 13)
@@ -202,6 +221,7 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
                 var id = $(this).data('criterium-id');
                 removeCriteria(id);
             });
+            $('#save-scorecard').on('click', saveScorecard);
 
             $('#invite-gradee').editable({
               type: 'text',
