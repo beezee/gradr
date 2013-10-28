@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 2764077e3af32a88114d68c75e20ef738e4fa829
+  revision: 0064ef1dd063043c5414612dae7691a0887b0ae6
   branch: master
   specs:
-    friendly_id (5.0.0)
+    friendly_id (5.0.1)
       activerecord (~> 4.0.0)
 
 GEM
@@ -113,6 +113,7 @@ GEM
     uglifier (2.1.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    will_paginate (3.0.5)
 
 PLATFORMS
   ruby
@@ -130,3 +131,4 @@ DEPENDENCIES
   sdoc
   turbolinks (= 1.1.1)
   uglifier (= 2.1.1)
+  will_paginate (~> 3.0)

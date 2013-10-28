@@ -1,1 +1,68 @@
 <%= provide :title, 'Dashboard' %>
+<div class="portlet box blue">
+  <div class="portlet-title">
+    You Graded
+  </div>
+  <div class="portlet-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Gradee</th>
+            <th>2 week average</th>
+            <th>2 month average</th>
+            <th>Stats</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @gradees.each do |gradee| %>
+          <tr>
+            <td>
+             <%= gradee.email %>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="portlet box blue">
+  <div class="portlet-title">
+    Graded You
+  </div>
+  <div class="portlet-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Grader</th>
+            <th>Last scored</th>
+            <th>Stats</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @graders.uniq.each do |grader| %>
+          <tr>
+            <td>
+             <%= grader.email %>
+            </td>
+            <td>
+              <%= grader.grader_scorecards.order('updated_at DESC').find_by(gradee_id: current_user.id).updated_at.strftime "%m/%d/%Y" %>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+        <%= will_paginate @graders %>
+      </table>
+    </div>
+  </div>
+</div>

@@ -33,6 +33,8 @@ gem 'protected_attributes'
 
 gem 'friendly_id', github: 'FriendlyId/friendly_id', branch: 'master'
 
+gem 'will_paginate', '~> 3.0'
+
 gem 'bcrypt-ruby', '3.0.1'
 
 group :doc do

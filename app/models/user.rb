@@ -49,5 +49,5 @@ class User < ActiveRecord::Base
     hash = Digest::MD5.hexdigest(self.email.downcase.strip)
     "http://www.gravatar.com/avatar/#{hash}"
   end
-
+    
 end
