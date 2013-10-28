@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_filter :authorize, :except => [:request_invite, :login]
 
   def default_url_options
-    {:host => 'gradr.net'}
+    {:host => ENV['APP_URL']}
   end
 
   def authorize

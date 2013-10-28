@@ -10,7 +10,7 @@ Gradr::Application.configure do
     password: '6e7d35d5-e012-4851-a353-5cdefb04074f',
     authentication: 'plain',
     enable_starttls_auto: true }
-  config.action_mailer.default_url_options = { host: 'gradr.net' }
+  config.action_mailer.default_url_options = { host: ENV['APP_URL'] }
 end
 
 # Initialize the Rails application.

@@ -35,6 +35,8 @@ gem 'friendly_id', github: 'FriendlyId/friendly_id', branch: 'master'
 
 gem 'bcrypt-ruby', '3.0.1'
 
+gem 'dotenv-rails'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
