@@ -46,6 +46,5 @@ class UsersController < ApplicationController
       @grader.criteria.each {|c| @scorecards_data[s.id]['scores'][c.name] = c.score_for_scorecard(s).score}
     end
     puts @scorecards_data
-    puts @scorecards_data.to_json
   end
 end

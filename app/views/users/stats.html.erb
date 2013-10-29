@@ -1,2 +1,17 @@
 <% provide :title, sanitize(@title) %>
-<%= @scorecards_data.to_json %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+    (function($, exports, undefined){
+      exports.GradrStats = function(){
+        var self = this;
+        self.rawData = $.parseJSON($('#stats_json').text());
+        self.allScores = _.flatten(_.map(_.pluck(self.rawData, 'scores'), function(o){return _.values(o);}));
+        self.overAllAverage = _.reduce(self.allScores, function(memo, num){ return memo+num; }, 0) / self.allScores.length;
+      };
+
+    }(jQuery, window));
+  </script>
+<% end %>
+<div id="stats_json">
+  <%= @scorecards_data.to_json %>
+</div>
