@@ -2,6 +2,7 @@ require 'bcrypt'
 
 class User < ActiveRecord::Base
   extend FriendlyId
+  include GradeeStats
   friendly_id :slug_candidates, use: :slugged
   validates :email, format: { with: /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, message: 'Must be a valid email address'}
   has_and_belongs_to_many :criteria, join_table: "user_criteria"

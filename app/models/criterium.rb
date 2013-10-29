@@ -3,8 +3,8 @@ class Criterium < ActiveRecord::Base
   has_many :scores
 
   def score_for_scorecard(scorecard)
-    return scorecard.scores.find {|s| s.criterium_id == self.id} ||
-        Score.create_for_scorecard_and_criterium(scorecard, self)
+    return @score_stub || scorecard.scores.find {|s| s.criterium_id == self.id} ||
+        @score_stub = Score.create_for_scorecard_and_criterium(scorecard, self)
   end
 
 end

@@ -1,6 +1,7 @@
 class ScorecardsController < ApplicationController
 
   def edit
+    response.headers['X-Frame-Options'] = 'GOFORIT'
     if !params[:url] || params[:url].empty?
       return not_found
     end

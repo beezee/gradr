@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
   def dashboard
    @graders = current_user.graders.includes(:grader_scorecards).paginate(:page => params[:graders_page])
-   @gradees = current_user.gradees.includes(grader_scorecards: :scores).where('grader_scorecards_users.grader_id = ?', current_user.id)
+   @gradees = current_user.gradees.includes(gradee_scorecards: :scores).where("gradee_scorecards_users.updated_at > ?", 2.months.ago)
                     .paginate :page => params[:gradees_page]
   end
 end

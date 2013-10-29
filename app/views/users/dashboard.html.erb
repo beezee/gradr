@@ -30,8 +30,10 @@
              <%= gradee.email %>
             </td>
             <td>
+              <%= gradee.average_score_by_grader_since(current_user.id, 2.weeks.ago) %>
             </td>
             <td>
+              <%= gradee.average_score_by_grader_since(current_user.id, 2.months.ago) %>
             </td>
             <td>
             </td>
