@@ -17,5 +17,13 @@ class Scorecard < ActiveRecord::Base
     scorecard.save
     scorecard
   end
-    
+
+  def scored_points
+    self.scores.to_a.collect {|s| s.score}
+  end
+
+  def average_score
+    self.scored_points.sum / self.scores.size rescue 0
+  end
+
 end

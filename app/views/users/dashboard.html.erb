@@ -1,16 +1,18 @@
 <%= provide :title, 'Dashboard' %>
-<div>
-  <div class="pull-right">
-    <a class="btn blue btn-sm" href="javascript:(function(){var i=document.getElementById('gradr-iframe')||document.createElement('iframe'),u=window.location.href;i.style.position='fixed';i.style.top='50px';i.style.right='10px';i.style.width='200px';i.style.height='800px';i.id='gradr-iframe';i.src='//<%= ENV['APP_URL'] %>/scorecard/?url='+u;if(!document.getElementById('gradr-iframe'))document.body.appendChild(i);}());">
-      GRADR
-    </a>
-    <span class="label label-info">Click and drag to your bookmarks bar to grade any page on the web</span>
-  </div><br />
-  <hr />
-</div>
+<%= content_for :scripts do %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('.recent-activity-chart').each(function(){
+          $(this).sparkline($(this).data('activity'), {
+              type: 'bar'});
+        });
+    });
+  </script>
+<% end %>
+<% if @gradees.length > 0 %>
 <div class="portlet box blue">
   <div class="portlet-title">
-    You Graded
+    Your Gradees
   </div>
   <div class="portlet-body">
     <div class="table-responsive">
@@ -18,9 +20,8 @@
         <thead>
           <tr>
             <th>Gradee</th>
-            <th>2 week average</th>
-            <th>2 month average</th>
-            <th>Stats</th>
+            <th>Recent Activity (avg score)</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -30,12 +31,10 @@
              <%= gradee.email %>
             </td>
             <td>
-              <%= gradee.average_score_by_grader_since(current_user.id, 2.weeks.ago) %>
+              <div class="recent-activity-chart" data-activity=<%= gradee.averages_by_grader_since(current_user.id, 3.weeks.ago).to_json %>></div>
             </td>
             <td>
-              <%= gradee.average_score_by_grader_since(current_user.id, 2.months.ago) %>
-            </td>
-            <td>
+              <%= link_to 'Details', user_stats, grader_slug: current_user.slug, gradee_slug: gradee.slug %>
             </td>
           </tr>
           <% end %>
@@ -44,9 +43,11 @@
     </div>
   </div>
 </div>
+<% end %>
+<% if @graders.length > 0 %>
 <div class="portlet box blue">
   <div class="portlet-title">
-    Graded You
+    Your Graders 
   </div>
   <div class="portlet-body">
     <div class="table-responsive">
@@ -54,8 +55,8 @@
         <thead>
           <tr>
             <th>Grader</th>
-            <th>Last scored</th>
-            <th>Stats</th>
+            <th>Recent Activity (avg score)</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -65,9 +66,10 @@
              <%= grader.email %>
             </td>
             <td>
-              <%= grader.grader_scorecards.order('updated_at DESC').find_by(gradee_id: current_user.id).updated_at.strftime "%m/%d/%Y" %>
+              <div class="recent-activity-chart" data-activity=<%= current_user.averages_by_grader_since(grader.id, 3.weeks.ago).to_json %>></div>
             </td>
             <td>
+              <%= link_to 'Details', {controller: 'users', action: 'stats', gradee_slug: current_user.slug, grader_slug: grader.slug} %>
             </td>
           </tr>
           <% end %>
@@ -76,4 +78,14 @@
       </table>
     </div>
   </div>
+</div>
+<% end %>
+<div>
+  <div class="pull-right">
+    <a class="btn blue btn-sm" href="javascript:(function(){var i=document.getElementById('gradr-iframe')||document.createElement('iframe'),u=window.location.href;i.style.position='fixed';i.style.top='50px';i.style.right='10px';i.style.width='200px';i.style.height='800px';i.id='gradr-iframe';i.src='//<%= ENV['APP_URL'] %>/scorecard/?url='+u;if(!document.getElementById('gradr-iframe'))document.body.appendChild(i);}());">
+      GRADR
+    </a>
+    <span class="label label-info">Click and drag to your bookmarks bar to grade any page on the web</span>
+  </div><br />
+  <hr />
 </div>

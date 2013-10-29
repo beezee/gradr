@@ -4,6 +4,7 @@ Gradr::Application.routes.draw do
   get 'login/:slug/:link_hash' => 'users#login'
   get 'logout' => 'users#logout', as: 'logout'
   get 'dashboard' => 'users#dashboard', as: 'dashboard'
+  get 'stats/for/:gradee_slug/by/:grader_slug' => 'users#stats', as: 'user_stats'
   get 'scorecard' => 'scorecards#edit', as: 'scorecard_editor'
   post 'scorecard/:id/invite-gradee' => 'scorecards#invite_gradee'
   post 'scorecard/:id/save' => 'scorecards#save'

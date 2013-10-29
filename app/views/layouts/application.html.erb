@@ -170,14 +170,14 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
    <!-- END:File Upload Plugin JS files-->
    <!-- END: Page level plugins -->
    <script src="/assets/scripts/app.js"></script>      
-   <script src="/assets/scripts/inbox.js"></script>    
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.js"></script>
    <script>
       jQuery(document).ready(function() {       
          // initiate layout and plugins
          App.init();
-         Inbox.init();
       });
    </script>
+   <%= yield(:scripts) %>
    <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
