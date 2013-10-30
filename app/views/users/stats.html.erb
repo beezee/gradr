@@ -1,7 +1,5 @@
 <% provide :title, sanitize(@title) %>
 <% content_for :scripts do %>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.2/highcharts.js"></script>
-	<script type="text/javascript" src="/assets/scripts/highchart_theme.js"></script>
 	<script type="text/template" id="chart_template">
 			<li class="col-md-4">
 				<div class="portlet solid blue">
@@ -43,27 +41,27 @@
 				markup += _.template(template, {criterium: criterium, criteriumName: g.criteria[criterium]});
 			});
 			$('#series-charts').html(markup);
-			var baseChartOptions = {
-						chart:{type: 'spline'}, 
-						xAxis:{type: 'datetime'},
-						 yAxis:{title:{text:"Score"}, min:0},
-						toolTip:{xDateFormat: '%m/%d/%Y'}};
 			_.each(g.criteriaSeries(), function(series, criterium){
-				$("#"+criterium+"-criterium").highcharts(
-						$.extend({}, baseChartOptions, {title: g.criteria[criterium]+" Scores",
-						series: [{name: g.criteria[criterium], data: series}]}));
+					$('#'+criterium+'-criterium').sparkline(series, 
+								{type: 'line', width:'100%', height:'100px;',
+								min:0, max:10});
 			});
-			$("#all-criteria-chart").highcharts(
-					$.extend({}, baseChartOptions, {title: "All scores",
-					series: _.map(g.criteriaSeries(), function(series, criterium){ 
-														return {name: g.criteria[criterium], data: series};})}));
+			var popped = false;
+			_.each(g.criteriaSeries(), function(series, criterium){
+				var options = {fillColor: false, width:'100%', height:'120px', type:'line', composite:true};
+				if (!popped){
+					delete options['composite'];
+					popped = true;
+				}
+				$('#all-criteria-chart').sparkline(series, options);
+			});
     }(jQuery, window));
   </script>
 <% end %>
 <div class="hidden" id="stats_json">
   <%= @scorecards_data.to_json %>
 </div>
-<ul class="row">
+<ul class="row" style="list-style:none;">
 	<li class="span-md-12"> 
 		<div class="portlet solid blue">
 			<div class="portlet-title">
@@ -74,4 +72,4 @@
 		</div>
 	</li>
 </ul>
-<ul class="row" id="series-charts"></ul>
+<ul style="list-style:none;" class="row" id="series-charts"></ul>
