@@ -1,5 +1,13 @@
 <% provide :title, sanitize(@title) %>
+<% content_for :styles do %>
+<style>
+ul.row{
+padding-left:0px;
+}
+</style>
+<% end %>
 <% content_for :scripts do %>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.2/highcharts.js"></script>
 	<script type="text/template" id="chart_template">
 			<li class="col-md-4">
 				<div class="portlet solid blue">
@@ -7,8 +15,11 @@
 						<div class="caption">
 							{{= criteriumName }} Scores
 						</div>
+            <div class="actions">
+              <span class="number">Average: {{= criteriumAverage}}</span> 
+            </div>
 					</div>
-					<div class="portlet-body" style="width:100%;" id="{{= criterium }}-criterium">
+					<div class="portlet-body" style="width:100%;height:100px;" id="{{= criterium }}-criterium">
 					</div>
 				</div>
 			</li>
@@ -19,7 +30,7 @@
         var self = this;
         self.rawData = $.parseJSON($('#stats_json').text());
         self.allScores = _.flatten(_.map(_.pluck(self.rawData, 'scores'), function(o){return _.values(o);}));
-        self.overAllAverage = _.reduce(self.allScores, function(memo, num){ return memo+num; }, 0) / self.allScores.length;
+        self.overAllAverage = (_.reduce(self.allScores, function(memo, num){ return memo+num; }, 0) / self.allScores.length).toFixed(2);
 				self.criteria = _.keys(self.rawData[_.first(_.keys(self.rawData))].scores);
 				self.criteriaSeries = function(){
 					var series = {};
@@ -30,7 +41,12 @@
 					});	
 					return series;
 				};
+        self.averageForCriterium = function(criteriumIndex){
+           var scores = _.pluck(self.criteriaSeries()[criteriumIndex], 1);
+           return (_.reduce(scores, function(memo, num){ return memo+num; }, 0) / scores.length).toFixed(2);
+        };
       }; 
+
 			_.templateSettings = {
 					interpolate: /\{\{\=(.+?)\}\}/g,
 					evaluate: /\{\{(.+?)\}\}/g
@@ -38,23 +54,34 @@
 			var g = new GradrStats();
 			var markup = '', template = $('#chart_template').html();
 			_.each(g.criteriaSeries(), function(series, criterium){
-				markup += _.template(template, {criterium: criterium, criteriumName: g.criteria[criterium]});
+				markup += _.template(template, {criterium: criterium, criteriumName: g.criteria[criterium],
+                                          criteriumAverage: g.averageForCriterium(criterium)});
 			});
 			$('#series-charts').html(markup);
 			_.each(g.criteriaSeries(), function(series, criterium){
-					$('#'+criterium+'-criterium').sparkline(series, 
-								{type: 'line', width:'100%', height:'100px;',
-								min:0, max:10});
+					$('#'+criterium+'-criterium').sparkline(_.pluck(series, 1), 
+								{type: 'bar', width:'100%', height:'100px', barColor: '#eaedf2',
+								chartRangeMin:0, chartRangeMax:10, barWidth: 3});
 			});
-			var popped = false;
-			_.each(g.criteriaSeries(), function(series, criterium){
-				var options = {fillColor: false, width:'100%', height:'120px', type:'line', composite:true};
-				if (!popped){
-					delete options['composite'];
-					popped = true;
-				}
-				$('#all-criteria-chart').sparkline(series, options);
-			});
+      var tooltipFormatter = function(sp, options, fields) {
+          var format =  $.spformat('<div class="jqsfield"><span style="color: {{color}}">&#9679;</span> {{myprefix}} {{value}}</div>');
+          var result = '';
+          $.each(fields, function(i, field) {
+              field.myprefix = options.get('seriesPrefixes')[i];
+              result += format.render(field, options.get('tooltipValueLookups'), options);
+          })
+          return result;
+      };
+      var baseChartOptions = {
+            chart:{type: 'spline', spacingTop:44}, 
+            xAxis:{type: 'datetime'},
+             yAxis:{title:{text:"Score"}, min:0, max:10},
+            toolTip:{xDateFormat: '%m/%d/%Y'}};
+      $("#all-criteria-chart").highcharts(
+          $.extend({}, baseChartOptions, {title: "All scores",
+          series: _.map(g.criteriaSeries(), 
+              function(series, criterium){return {name: g.criteria[criterium], data: series};})}));
+       $('#overall-average').text(g.overAllAverage);
     }(jQuery, window));
   </script>
 <% end %>
@@ -66,6 +93,7 @@
 		<div class="portlet solid blue">
 			<div class="portlet-title">
 				<div class="caption">All Scores</div>
+        <div class="actions">Overall Average: <span class="number" id="overall-average"></span></div>
 			</div>
 			<div class="portlet-body" id="all-criteria-chart">
 			</div>

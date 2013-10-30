@@ -1,148 +1,12 @@
-<!DOCTYPE html>
-<!-- 
-Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.0
-Version: 1.5.2
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
--->
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-<!-- BEGIN HEAD -->
-<head>
-   <meta charset="utf-8" />
-   <title>GRADR | Scorecard for <%= sanitize params[:url] %></title>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-   <meta content="" name="description" />
-   <meta content="" name="author" />
-   <meta name="MobileOptimized" content="320">
-   <%= csrf_meta_tags %>
-   <!-- BEGIN GLOBAL MANDATORY STYLES -->          
-   <link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-   <!-- END GLOBAL MANDATORY STYLES -->
-   <!-- BEGIN THEME STYLES --> 
-   <link href="/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/css/style.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
-   <link href="/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-   <link href="/assets/css/custom.css" rel="stylesheet" type="text/css"/>
-   <!-- END THEME STYLES -->
-   <link rel="shortcut icon" href="/favicon.ico" />
-   <link href="/assets/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />
-   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-    <style>
-      .editable-input input {
-        max-width: 110px;
-      }
-    </style>
-</head>
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<body class="page-header-fixed">
-    <%= render partial: "shared/top_nav", locals: {compact: true} %>
-   <div class="clearfix"></div>
-   <!-- BEGIN CONTAINER -->   
-   <div class="page-container scroller" style="height:580px;">
-      <!-- BEGIN PAGE -->
-      <div class="page-content" style="margin-left:0px!important;height:800px;">
-          <div class="form-body" style="padding:0px;">
-           <div class="form-group" style="margin-bottom:0px;">
-              <div class="input-group">
-                <table style="margin-bottom:4px;" 
-                    class="table table-bordered table-striped table-condensed flip-content">
-                   <thead class="flip-content">
-                      <tr>
-                         <th>Gradee</th>
-                         <th></th> 
-                      </tr>
-                   </thead>
-                   <tbody>
-                      <tr>
-                         <td style="font-size:11px;max-width:98px;word-wrap:break-word;"> 
-                          <%= collection_select :scorecard, :gradee, current_user.gradees.uniq,
-                                          :id, :email, prompt: 'Select one',
-                                          selected: @scorecard.gradee_id %>
-                         </td>
-                         <td>
-                           <a class="editable-empty" id="invite-gradee"></a>
-                         </td>
-                      </tr>
-                   </tbody>
-                </table>
-                <table style="margin-bottom:4px;" 
-                    class="table table-bordered table-striped table-condensed flip-content">
-                   <thead class="flip-content">
-                      <tr>
-                         <th>Criteria</th>
-                         <th>Score</th> 
-                        <th></th>
-                      </tr>
-                   </thead>
-                   <tbody>
-                      <%current_user.criteria.each do |criterium| %>
-                      <tr>
-                         <td style="word-wrap:break-word;">
-                          <small><%= sanitize criterium.name %></small>
-                         </td>
-                         <td> 
-                            <%= select('criteria_score', criterium.score_for_scorecard(@scorecard).id, 
-                                      10.downto(1).to_a,
-                                      {:selected => criterium.score_for_scorecard(@scorecard).score},
-                                      :class => 'form-control input-sm js-score-select',
-                                      :style => 'max-width:51px;padding-left:0px;padding-top:3px;',
-                                      :'data-score_id' =>
-                                          criterium.score_for_scorecard(@scorecard).id) %>
-                         </td>
-                         <td style="padding-top:11px;">
-                          <i class="js-remove-criterium icon-remove clickable"
-                                data-criterium-id="<%= criterium.id %>"></i>
-                         </td>
-                      </tr>
-                      <% end %>
-                      <tr>
-                        <div class="input-group">
-                          <td colspan="2">
-                           <input id="new-criteria" type="text" 
-                                class="form-control" placeholder="New Criteria" /> 
-                          </td>
-                          <td style="padding-top:11px;">
-                            <i id="create-criteria" class="icon-plus clickable"></i>
-                          </td>
-                        </div>
-                      </tr>
-                   </tbody>
-                </table>
-              </div>
-           </div>
-        <div class="form-actions right" style="padding:4px 10px;margin-top:0px;"> 
-           <button type="submit" id="save-scorecard" class="btn pull-right green">Save</button> 
-        </div>
-      </div>
-      <!-- END PAGE -->
-   </div> 
-   <!-- BEGIN FOOTER -->
-   <!-- END FOOTER -->
-   <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-   <!-- BEGIN CORE PLUGINS -->   
-   <!--[if lt IE 9]>
-   <script src="/assets/plugins/respond.min.js"></script>
-   <script src="/assets/plugins/excanvas.min.js"></script> 
-   <![endif]-->   
-   <script src="/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
-   <script src="/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-   <script src="/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-   <script src="/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript" ></script>
-   <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-   <script src="/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>  
-   <script src="/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
-   <script src="/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript" ></script>
-   <!-- END CORE PLUGINS -->
-   <script src="/assets/scripts/app.js"></script>      
+<% provide :title, "GRADR | Scorecard for #{sanitize params[:url]}" %>
+<% content_for :styles do %>
+<style>
+.page-title{
+  display:none;
+}
+</style>
+<% end %>
+<% content_for :scripts do %>
    <script src="/assets/plugins/bootstrap-toastr/toastr.min.js" type="text/javascript"></script>
    <script src="/assets/plugins/jQuery.dropdownSelect.js" type="text/javascript"></script>
    <script src="/assets/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.min.js"></script>
@@ -225,7 +89,76 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
          });
       }(jQuery, window));
    </script>
-   <!-- END JAVASCRIPTS -->
-</body>
-<!-- END BODY -->
-</html>
+<% end %>
+<div class="form-body" style="padding:0px;height:900px;">
+ <div class="form-group" style="margin-bottom:0px;">
+    <div class="input-group">
+      <table style="margin-bottom:4px;" 
+          class="table table-bordered table-striped table-condensed flip-content">
+         <thead class="flip-content">
+            <tr>
+               <th>Gradee</th>
+               <th></th> 
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td style="font-size:11px;max-width:98px;word-wrap:break-word;"> 
+                <%= collection_select :scorecard, :gradee, current_user.gradees.uniq,
+                                :id, :email, prompt: 'Select one',
+                                selected: @scorecard.gradee_id %>
+               </td>
+               <td>
+                 <a class="editable-empty" id="invite-gradee"></a>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <table style="margin-bottom:4px;" 
+          class="table table-bordered table-striped table-condensed flip-content">
+         <thead class="flip-content">
+            <tr>
+               <th>Criteria</th>
+               <th>Score</th> 
+              <th></th>
+            </tr>
+         </thead>
+         <tbody>
+            <%current_user.criteria.each do |criterium| %>
+            <tr>
+               <td style="word-wrap:break-word;">
+                <small><%= sanitize criterium.name %></small>
+               </td>
+               <td> 
+                  <%= select('criteria_score', criterium.score_for_scorecard(@scorecard).id, 
+                            10.downto(1).to_a,
+                            {:selected => criterium.score_for_scorecard(@scorecard).score},
+                            :class => 'form-control input-sm js-score-select',
+                            :style => 'max-width:51px;padding-left:0px;padding-top:3px;',
+                            :'data-score_id' =>
+                                criterium.score_for_scorecard(@scorecard).id) %>
+               </td>
+               <td style="padding-top:11px;">
+                <i class="js-remove-criterium icon-remove clickable"
+                      data-criterium-id="<%= criterium.id %>"></i>
+               </td>
+            </tr>
+            <% end %>
+            <tr>
+              <div class="input-group">
+                <td colspan="2">
+                 <input id="new-criteria" type="text" 
+                      class="form-control" placeholder="New Criteria" /> 
+                </td>
+                <td style="padding-top:11px;">
+                  <i id="create-criteria" class="icon-plus clickable"></i>
+                </td>
+              </div>
+            </tr>
+         </tbody>
+      </table>
+    </div>
+ </div>
+<div class="form-actions right" style="padding:4px 10px;margin-top:0px;"> 
+ <button type="submit" id="save-scorecard" class="btn pull-right green">Save</button> 
+</div>

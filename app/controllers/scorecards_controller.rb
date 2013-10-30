@@ -1,15 +1,13 @@
 class ScorecardsController < ApplicationController
 
   def edit
+    @skip_header = true
     response.headers['X-Frame-Options'] = 'GOFORIT'
     if !params[:url] || params[:url].empty?
       return not_found
     end
     @scorecard = Scorecard.find_by(url: params[:url], grader_id: current_user.id) || 
         Scorecard.create_for_url_by_grader(params[:url], current_user)
-    respond_to do |f|
-      f.html { render layout: false }
-    end
   end
 
   def invite_gradee

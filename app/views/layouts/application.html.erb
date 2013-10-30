@@ -19,6 +19,7 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
    <meta content="" name="description" />
    <meta content="" name="author" />
    <meta name="MobileOptimized" content="320">
+  <%= csrf_meta_tags %>
    <!-- BEGIN GLOBAL MANDATORY STYLES -->          
    <link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
    <link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -41,54 +42,17 @@ Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-templa
    <link href="/assets/css/custom.css" rel="stylesheet" type="text/css"/>
    <!-- END THEME STYLES -->
    <link rel="shortcut icon" href="/favicon.ico" />
+  <%= yield :styles %>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed">
-    <%= render "shared/top_nav" %>
+    <%=  render "shared/top_nav" unless @skip_header %>
    <div class="clearfix"></div>
    <!-- BEGIN CONTAINER -->
    <div class="page-container">
-      <!-- BEGIN SIDEBAR -->
-      <div class="page-sidebar navbar-collapse collapse">
-         <!-- BEGIN SIDEBAR MENU -->        
-         <ul class="page-sidebar-menu">
-            <li>
-               <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-               <div class="sidebar-toggler hidden-phone"></div>
-               <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-            </li>
-            <li>
-            </li>
-            <li class="start ">
-               <a href="index.html">
-               <i class="icon-home"></i> 
-               <span class="title">Dashboard</span>
-               </a>
-            </li>
-            <li class="">
-               <a href="javascript:;">
-               <i class="icon-bar-chart"></i> 
-               <span class="title">Scorecards</span>
-               <span class="arrow "></span>
-               </a>
-               <ul class="sub-menu">
-                  <li >
-                     <a href="layout_language_bar.html">
-                      As Grader</a>
-                  </li>
-                  <li >
-                     <a href="layout_horizontal_sidebar_menu.html">
-                     As Gradee</a>
-                  </li>
-               </ul>
-            </li>
-         </ul>
-         <!-- END SIDEBAR MENU -->
-      </div>
-      <!-- END SIDEBAR -->
       <!-- BEGIN PAGE -->
-      <div class="page-content">
+      <div class="page-content" style="margin-left:0px!important;">
          <!-- BEGIN PAGE HEADER-->
          <div class="row">
             <div class="col-md-12">
