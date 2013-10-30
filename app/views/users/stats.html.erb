@@ -1,5 +1,10 @@
 <% provide :title, sanitize(@title) %>
 <% content_for :scripts do %>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.2/highcharts.js"></script>
+	<script type="text/javascript" src="/assets/scripts/highchart_theme.js"></script>
+	<script type="text/template" id="chart_template">
+			<li class="col-md-4" style="height:280px;" id="{{= criterium }}-criterium"></li>
+	</script>
   <script type="text/javascript">
     (function($, exports, undefined){
       exports.GradrStats = function(){
@@ -7,11 +12,49 @@
         self.rawData = $.parseJSON($('#stats_json').text());
         self.allScores = _.flatten(_.map(_.pluck(self.rawData, 'scores'), function(o){return _.values(o);}));
         self.overAllAverage = _.reduce(self.allScores, function(memo, num){ return memo+num; }, 0) / self.allScores.length;
-      };
-
+				self.criteria = _.keys(self.rawData[_.first(_.keys(self.rawData))].scores);
+				self.criteriaSeries = function(){
+					var series = {};
+					_.each(self.criteria, function(criterium, id){
+						series[id] = _.map(self.rawData, function(scorecard){
+							return [new Date(scorecard.date).getTime(), scorecard.scores[criterium]];
+						});
+					});	
+					return series;
+				};
+      }; 
+			_.templateSettings = {
+					interpolate: /\{\{\=(.+?)\}\}/g,
+					evaluate: /\{\{(.+?)\}\}/g
+			};
+			var g = new GradrStats();
+			var markup = '', template = $('#chart_template').html();
+			_.each(g.criteriaSeries(), function(series, criterium){
+				markup += _.template(template, {criterium: criterium});
+			});
+			$('#series-charts').html(markup);
+			_.each(g.criteriaSeries(), function(series, criterium){
+				$("#"+criterium+"-criterium").highcharts({
+						chart:{type: 'spline'}, title: g.criteria[criterium]+" Scores",
+						xAxis:{type: 'datetime'},
+						 yAxis:{title:{text:"Score"}, min:0},
+						toolTip:{xDateFormat: '%m/%d/%Y'},
+						series: [{name: g.criteria[criterium], data: series}]});
+			});
+			$("#all-criteria-chart").highcharts({
+					chart:{type: 'spline'}, title: "All scores",
+					xAxis:{type: 'datetime', dateTimeLabelFormats:{minute:'%b/%e/%y %H:%M'}},
+					 yAxis:{title:{text:"Score"}, min:0},
+					series: _.map(g.criteriaSeries(), function(series, criterium){ 
+														return {name: g.criteria[criterium], data: series};})});
     }(jQuery, window));
   </script>
 <% end %>
-<div id="stats_json">
+<div class="hidden" id="stats_json">
   <%= @scorecards_data.to_json %>
 </div>
+<ul class="row">
+	<li class="span-md-12" id="all-criteria-chart">
+	</li>
+</ul>
+<ul class="row" id="series-charts"></ul>

@@ -4,7 +4,9 @@
     $(document).ready(function(){
         $('.recent-activity-chart').each(function(){
           $(this).sparkline($(this).data('activity'), {
-              type: 'bar'});
+              type: 'bar',
+		chartRangeMin: 0,
+		chartRangeMax: 10});
         });
     });
   </script>
@@ -34,7 +36,7 @@
               <div class="recent-activity-chart" data-activity=<%= gradee.averages_by_grader_since(current_user.id, 3.weeks.ago).to_json %>></div>
             </td>
             <td>
-              <%= link_to 'Details', user_stats, grader_slug: current_user.slug, gradee_slug: gradee.slug %>
+              <%= link_to 'Details', {controller: 'users', action: 'stats', gradee_slug: gradee.slug, grader_slug: current_user.slug} %>
             </td>
           </tr>
           <% end %>
