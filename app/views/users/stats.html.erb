@@ -36,13 +36,13 @@ padding-left:0px;
 					var series = {};
 					_.each(self.criteria, function(criterium, id){
 						series[id] = _.map(self.rawData, function(scorecard){
-							return [new Date(scorecard.date).getTime(), scorecard.scores[criterium]];
+							return {x: new Date(scorecard.date).getTime(), y: scorecard.scores[criterium], url: scorecard.url};
 						});
 					});	
 					return series;
 				};
         self.averageForCriterium = function(criteriumIndex){
-           var scores = _.pluck(self.criteriaSeries()[criteriumIndex], 1);
+           var scores = _.pluck(self.criteriaSeries()[criteriumIndex], 'y');
            return (_.reduce(scores, function(memo, num){ return memo+num; }, 0) / scores.length).toFixed(2);
         };
       }; 
@@ -59,24 +59,18 @@ padding-left:0px;
 			});
 			$('#series-charts').html(markup);
 			_.each(g.criteriaSeries(), function(series, criterium){
-					$('#'+criterium+'-criterium').sparkline(_.pluck(series, 1), 
+					$('#'+criterium+'-criterium').sparkline(_.pluck(series, 'y'), 
 								{type: 'bar', width:'100%', height:'100px', barColor: '#eaedf2',
 								chartRangeMin:0, chartRangeMax:10, barWidth: 3});
 			});
-      var tooltipFormatter = function(sp, options, fields) {
-          var format =  $.spformat('<div class="jqsfield"><span style="color: {{color}}">&#9679;</span> {{myprefix}} {{value}}</div>');
-          var result = '';
-          $.each(fields, function(i, field) {
-              field.myprefix = options.get('seriesPrefixes')[i];
-              result += format.render(field, options.get('tooltipValueLookups'), options);
-          })
-          return result;
-      };
       var baseChartOptions = {
             chart:{type: 'spline', spacingTop:44}, 
             xAxis:{type: 'datetime'},
              yAxis:{title:{text:"Score"}, min:0, max:10},
-            toolTip:{xDateFormat: '%m/%d/%Y'}};
+            tooltip:{xDateFormat: '%m/%d/%Y', useHTML: true, 
+            formatter: function(){ return '<a href="'+this.point.url+'" target="_blank">'
+                                    +Highcharts.dateFormat('%m/%d/%Y %I:%M %P', this.point.x)
+                                    +'<br />'+this.series.name+': '+this.point.y+'<br /></a>'}}};
       $("#all-criteria-chart").highcharts(
           $.extend({}, baseChartOptions, {title: "All scores",
           series: _.map(g.criteriaSeries(), 
