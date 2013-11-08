@@ -23,6 +23,7 @@
           <tr>
             <th>Gradee</th>
             <th>Recent Activity (avg score)</th>
+            <th>Recent Overall Average</th>
             <th></th>
           </tr>
         </thead>
@@ -34,6 +35,9 @@
             </td>
             <td>
               <div class="recent-activity-chart" data-activity=<%= gradee.averages_by_grader_since(current_user.id, 3.weeks.ago).to_json %>></div>
+            </td>
+            <td>
+              <%= gradee.average_by_grader_since current_user.id, 3.weeks.ago %>
             </td>
             <td>
               <%= link_to 'Details', {controller: 'users', action: 'stats', gradee_slug: gradee.slug, grader_slug: current_user.slug} %>
@@ -58,6 +62,7 @@
           <tr>
             <th>Grader</th>
             <th>Recent Activity (avg score)</th>
+            <th>Recent Overall Average</th>
             <th></th>
           </tr>
         </thead>
@@ -69,6 +74,9 @@
             </td>
             <td>
               <div class="recent-activity-chart" data-activity=<%= current_user.averages_by_grader_since(grader.id, 3.weeks.ago).to_json %>></div>
+            </td>
+            <td>
+              <%= current_user.average_by_grader_since grader.id, 3.weeks.ago %>
             </td>
             <td>
               <%= link_to 'Details', {controller: 'users', action: 'stats', gradee_slug: current_user.slug, grader_slug: grader.slug} %>
